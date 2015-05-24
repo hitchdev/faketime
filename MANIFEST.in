@@ -1,0 +1,3 @@
+recursive-include saddle *.py *.c *.map
+global-exclude *.o
+global-exclude *.so.1
