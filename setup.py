@@ -26,17 +26,26 @@ class CustomInstall(install):
         faketime_lib = os.path.join('faketime', libname)
         faketime_lib_mt = os.path.join('faketime', libnamemt)
         self.my_outputs = []
-        subprocess.check_call(['make', '-C', 'faketime/'])
+
+        os.chdir("faketime/")
+        if sys.platform == "linux" or sys.platform == "linux2":
+            subprocess.check_call(['make'])
+        else:
+            subprocess.check_call(['make', '-f', 'Makefile.OSX'])
+        os.chdir("../")
 
         dest = os.path.join(self.install_purelib, os.path.dirname(faketime_lib))
         dest_mt = os.path.join(self.install_purelib, os.path.dirname(faketime_lib_mt))
+
         try:
             os.makedirs(dest)
         except OSError as e:
             if e.errno != 17:
                 raise
         self.copy_file(faketime_lib, dest)
-        self.copy_file(faketime_lib_mt, dest_mt)
+
+        if os.path.exists(faketime_lib_mt):
+            self.copy_file(faketime_lib_mt, dest_mt)
         self.my_outputs.append(os.path.join(dest, libname))
 
         install.run(self)
