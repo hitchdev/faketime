@@ -27,12 +27,14 @@ class CustomInstall(install):
         faketime_lib_mt = os.path.join('faketime', libnamemt)
         self.my_outputs = []
 
-        os.chdir("faketime/")
+        setup_py_directory = os.path.dirname(os.path.realpath(__file__))
+        faketime_directory = os.path.join(setup_py_directory, "faketime")
+        os.chdir(faketime_directory)
         if sys.platform == "linux" or sys.platform == "linux2":
             subprocess.check_call(['make'])
         else:
             subprocess.check_call(['make', '-f', 'Makefile.OSX'])
-        os.chdir("../")
+        os.chdir(setup_py_directory)
 
         dest = os.path.join(self.install_purelib, os.path.dirname(faketime_lib))
         dest_mt = os.path.join(self.install_purelib, os.path.dirname(faketime_lib_mt))
@@ -63,7 +65,7 @@ def read(*parts):
     return codecs.open(os.path.join(os.path.abspath(os.path.dirname(__file__)), *parts), 'r').read()
 
 setup(name="faketime",
-      version=faketime.__version__,
+      version="0.9.6.1",
       description="Libfaketime wrapper.",
       long_description=read('README.rst'),
       classifiers=[
