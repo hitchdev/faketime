@@ -1566,6 +1566,7 @@ parse_modifiers:
 void ftpl_init(void)
 {
   char *tmp_env;
+  bool dont_fake_final;
 
 #ifdef __APPLE__
   const char *progname = getprogname();
@@ -1629,6 +1630,8 @@ void ftpl_init(void)
 #endif
 #endif
 
+  dont_fake = true; // Do not fake times during initialization
+  dont_fake_final = false;
   initialized = 1;
 
   ft_shm_init();
@@ -1662,24 +1665,36 @@ void ftpl_init(void)
   /* We can prevent faking time for specified commands */
   if ((tmp_env = getenv("FAKETIME_SKIP_CMDS")) != NULL)
   {
-    char *skip_cmd, *saveptr;
-    skip_cmd = strtok_r(tmp_env, ",", &saveptr);
-    while (skip_cmd != NULL)
+    char *skip_cmd, *saveptr, *tmpvar;
+    /* Don't mess with the env variable directly. */
+    tmpvar = strdup(tmp_env);
+    if (tmpvar != NULL)
     {
-      if (0 == strcmp(progname, skip_cmd))
+      skip_cmd = strtok_r(tmpvar, ",", &saveptr);
+      while (skip_cmd != NULL)
       {
-        ft_mode = FT_NOOP;
-        dont_fake = true;
-        break;
+        if (0 == strcmp(progname, skip_cmd))
+        {
+          ft_mode = FT_NOOP;
+          dont_fake_final = true;
+          break;
+        }
+        skip_cmd = strtok_r(NULL, ",", &saveptr);
       }
-      skip_cmd = strtok_r(NULL, ",", &saveptr);
+      free(tmpvar);
+      tmpvar = NULL;
+    }
+    else
+    {
+      fprintf(stderr, "Error: Could not copy the environment variable value.\n");
+      exit(EXIT_FAILURE);
     }
   }
 
   /* We can limit faking time to specified commands */
   if ((tmp_env = getenv("FAKETIME_ONLY_CMDS")) != NULL)
   {
-    char *only_cmd, *saveptr;
+    char *only_cmd, *saveptr, *tmpvar;
     bool cmd_matched = false;
 
     if (getenv("FAKETIME_SKIP_CMDS") != NULL)
@@ -1688,21 +1703,29 @@ void ftpl_init(void)
       exit(EXIT_FAILURE);
     }
 
-    only_cmd = strtok_r(tmp_env, ",", &saveptr);
-    while (only_cmd != NULL)
-    {
-      if (0 == strcmp(progname, only_cmd))
+    /* Don't mess with the env variable directly. */
+    tmpvar = strdup(tmp_env);
+    if (tmpvar != NULL) {
+      only_cmd = strtok_r(tmpvar, ",", &saveptr);
+      while (only_cmd != NULL)
       {
-        cmd_matched = true;
-        break;
+        if (0 == strcmp(progname, only_cmd))
+        {
+          cmd_matched = true;
+          break;
+        }
+        only_cmd = strtok_r(NULL, ",", &saveptr);
       }
-      only_cmd = strtok_r(NULL, ",", &saveptr);
-    }
 
-    if (!cmd_matched)
-    {
-      ft_mode = FT_NOOP;
-      dont_fake = true;
+      if (!cmd_matched)
+      {
+        ft_mode = FT_NOOP;
+        dont_fake_final = true;
+      }
+      free(tmpvar);
+    } else {
+      fprintf(stderr, "Error: Could not copy the environment variable value.\n");
+      exit(EXIT_FAILURE);
     }
   }
 
@@ -1829,6 +1852,8 @@ void ftpl_init(void)
     parse_config_file = false;
     parse_ft_string(tmp_env);
   }
+
+  dont_fake = dont_fake_final;
 }
 
 
@@ -1901,9 +1926,15 @@ int fake_clock_gettime(clockid_t clk_id, struct timespec *tp)
     switch (clk_id)
     {
       case CLOCK_REALTIME:
+#ifdef CLOCK_REALTIME_COARSE
+      case CLOCK_REALTIME_COARSE:
+#endif
         timespecsub(tp, &ftpl_starttime.real, &tmp_ts);
         break;
       case CLOCK_MONOTONIC:
+#ifdef CLOCK_MONOTONIC_COARSE
+      case CLOCK_MONOTONIC_COARSE:
+#endif
         timespecsub(tp, &ftpl_starttime.mon, &tmp_ts);
         break;
       case CLOCK_MONOTONIC_RAW:
@@ -2041,9 +2072,15 @@ int fake_clock_gettime(clockid_t clk_id, struct timespec *tp)
         switch (clk_id)
         {
           case CLOCK_REALTIME:
+#ifdef CLOCK_REALTIME_COARSE
+          case CLOCK_REALTIME_COARSE:
+#endif
             timespecsub(tp, &ftpl_starttime.real, &tdiff);
             break;
           case CLOCK_MONOTONIC:
+#ifdef CLOCK_MONOTONIC_COARSE
+          case CLOCK_MONOTONIC_COARSE:
+#endif
             timespecsub(tp, &ftpl_starttime.mon, &tdiff);
             break;
           case CLOCK_MONOTONIC_RAW:
