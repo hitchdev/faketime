@@ -31,9 +31,9 @@ class CustomInstall(install):
         faketime_directory = os.path.join(setup_py_directory, "faketime")
         os.chdir(faketime_directory)
         if sys.platform == "linux" or sys.platform == "linux2":
-            subprocess.check_call(['make', '-Wno-error'])
+            subprocess.check_call(['make',])
         else:
-            subprocess.check_call(['make', '-Wno-error', '-f', 'Makefile.OSX'])
+            subprocess.check_call(['make', '-f', 'Makefile.OSX'])
         os.chdir(setup_py_directory)
 
         dest = os.path.join(self.install_purelib, os.path.dirname(faketime_lib))
