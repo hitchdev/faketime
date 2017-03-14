@@ -4,9 +4,11 @@ setup.cfg
 build/
 dist/
 faketime.egg-info/
-venv/
-venv3/
 *.o
 *.so.1
 *.1.dylib
 faketime/faketime
+state/
+example/
+hitch/hitchdir
+hitch/__pycache__
