@@ -74,7 +74,7 @@ def read(*parts):
     return codecs.open(join(abspath(dirname(__file__)), *parts), 'r').read()
 
 setup(name="faketime",
-      version="0.9.6.6",
+      version="0.9.6.7",
       description="Libfaketime wrapper.",
       long_description=read('README.rst'),
       classifiers=[
