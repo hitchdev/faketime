@@ -1,5 +1,6 @@
-Python:
+Python on Ubuntu:
   preconditions:
+    operating system: ubuntu-trusty-64
     files:
       fake.py: |
         from commandlib import Command
@@ -16,3 +17,15 @@ Python:
     - Run:
         cmd: python /faketime/example/fake.py
         expect: 2050
+
+
+Python on Sierra:
+  based on: Python on Ubuntu
+  preconditions:
+    operating system: macos-sierra
+
+
+Python on El Capitan:
+  based on: Python on Ubuntu
+  preconditions:
+    operating system: macos-elcapitan

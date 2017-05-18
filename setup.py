@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*
+from os.path import join, realpath, dirname, exists, abspath
 from setuptools.command.install import install
 from setuptools import find_packages
 from setuptools import setup
 import subprocess
-import codecs
 import faketime
+import codecs
 import sys
 import os
 
@@ -23,21 +24,29 @@ class CustomInstall(install):
             sys.stderr.flush()
             return
 
-        faketime_lib = os.path.join('faketime', libname)
-        faketime_lib_mt = os.path.join('faketime', libnamemt)
+        faketime_lib = join('faketime', libname)
+        faketime_lib_mt = join('faketime', libnamemt)
         self.my_outputs = []
 
-        setup_py_directory = os.path.dirname(os.path.realpath(__file__))
-        faketime_directory = os.path.join(setup_py_directory, "faketime")
+        setup_py_directory = dirname(realpath(__file__))
+        faketime_directory = join(setup_py_directory, "faketime")
         os.chdir(faketime_directory)
         if sys.platform == "linux" or sys.platform == "linux2":
             subprocess.check_call(['make',])
         else:
+            os.chdir(setup_py_directory)
+            if "10.12" in subprocess.check_output(["sw_vers", "-productVersion"]):
+                self.copy_file(
+                    join('faketime', "libfaketime.c.sierra"),
+                    join('faketime', "libfaketime.c")
+                )
+
+            os.chdir(faketime_directory)
             subprocess.check_call(['make', '-f', 'Makefile.OSX'])
         os.chdir(setup_py_directory)
 
-        dest = os.path.join(self.install_purelib, os.path.dirname(faketime_lib))
-        dest_mt = os.path.join(self.install_purelib, os.path.dirname(faketime_lib_mt))
+        dest = join(self.install_purelib, dirname(faketime_lib))
+        dest_mt = join(self.install_purelib, dirname(faketime_lib_mt))
 
         try:
             os.makedirs(dest)
@@ -46,9 +55,9 @@ class CustomInstall(install):
                 raise
         self.copy_file(faketime_lib, dest)
 
-        if os.path.exists(faketime_lib_mt):
+        if exists(faketime_lib_mt):
             self.copy_file(faketime_lib_mt, dest_mt)
-        self.my_outputs.append(os.path.join(dest, libname))
+        self.my_outputs.append(join(dest, libname))
 
         install.run(self)
 
@@ -62,7 +71,7 @@ class CustomInstall(install):
 def read(*parts):
     # intentionally *not* adding an encoding option to open
     # see here: https://github.com/pypa/virtualenv/issues/201#issuecomment-3145690
-    return codecs.open(os.path.join(os.path.abspath(os.path.dirname(__file__)), *parts), 'r').read()
+    return codecs.open(join(abspath(dirname(__file__)), *parts), 'r').read()
 
 setup(name="faketime",
       version="0.9.6.6",
