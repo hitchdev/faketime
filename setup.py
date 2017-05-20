@@ -35,7 +35,7 @@ class CustomInstall(install):
             subprocess.check_call(['make',])
         else:
             os.chdir(setup_py_directory)
-            if "10.12" in subprocess.check_output(["sw_vers", "-productVersion"]):
+            if "10.12" in subprocess.check_output(["sw_vers", "-productVersion"]).decode('utf8'):
                 self.copy_file(
                     join('faketime', "libfaketime.c.sierra"),
                     join('faketime', "libfaketime.c")
@@ -74,7 +74,7 @@ def read(*parts):
     return codecs.open(join(abspath(dirname(__file__)), *parts), 'r').read()
 
 setup(name="faketime",
-      version="0.9.6.7",
+      version="0.9.6.8",
       description="Libfaketime wrapper.",
       long_description=read('README.rst'),
       classifiers=[
