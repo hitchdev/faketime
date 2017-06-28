@@ -1,37 +1,25 @@
 from hitchstory import StoryCollection, BaseEngine, StorySchema
-from hitchrun import Path
+from hitchrun import DIR
 from hitchvm import StandardBox, Vagrant
 from pathquery import pathq
 import sys
 from pexpect import EOF
 import hitchrun
-from strictyaml import MapPattern, Str, Enum
+from strictyaml import Map, MapPattern, Str, Enum
+
 import hitchvm
 
 
-KEYPATH = Path(__file__).abspath().dirname()
-
-class Paths(object):
-    def __init__(self, keypath):
-        from hitchrun import genpath
-        self.keypath = keypath
-        self.project = keypath.parent
-        self.state = genpath.joinpath("state")
-
-        if not self.state.exists():
-            self.state.mkdir()
-
-
 class Engine(BaseEngine):
-    def __init__(self, keypath):
-        self.path = Paths(keypath)
+    def __init__(self, paths):
+        self.path = paths
 
     schema = StorySchema(
-        preconditions={
+        preconditions=Map({
             "operating system": Enum([
                 "macos-sierra", "ubuntu-trusty-64", "macos-elcapitan"]),
             "files": MapPattern(Str(), Str()),
-        },
+        }),
     )
 
     def set_up(self):
@@ -54,8 +42,8 @@ class Engine(BaseEngine):
             ),
         }
 
-        box = StandardBox(Path("~/.hitchpkg").expand(), operating_sys, recipes[operating_sys])
-        self.vm = Vagrant("faketime", box, self.path.state)
+        box = StandardBox(self.path.share, operating_sys, recipes[operating_sys])
+        self.vm = Vagrant("faketime", box, self.path.gen)
         self.vm = self.vm.synced_with(self.path.project, "/faketime/")
 
         if not self.vm.snapshot_exists("faketime-{0}-ready".format(operating_sys)):
@@ -98,7 +86,7 @@ class Engine(BaseEngine):
 
 
 def test(name):
-    print(StoryCollection(pathq(KEYPATH).ext("story"), Engine(KEYPATH)).shortcut(name).play().report())
+    print(StoryCollection(pathq(DIR.key).ext("story"), Engine(DIR)).shortcut(name).play().report())
 
 
 def lint():

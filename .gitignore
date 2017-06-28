@@ -11,4 +11,5 @@ faketime/faketime
 state/
 example/
 hitch/hitchdir
+hitch/gen
 hitch/__pycache__
