@@ -61,12 +61,14 @@ class Engine(BaseEngine):
         if not self.vm.snapshot_exists("faketime-{0}-ready".format(operating_sys)):
             self.vm.up()
             self.long_run("sudo pip install commandlib")
+            self.long_run("sudo pip3 install commandlib")
             self.vm.take_snapshot("faketime-{0}-ready".format(operating_sys))
             self.vm.halt()
 
         self.vm.restore_snapshot("faketime-{0}-ready".format(operating_sys))
         self.vm.sync()
         self.run("cd /faketime ; sudo pip install .")
+        self.run("cd /faketime ; sudo pip3 install .")
 
     def long_run(self, cmd):
         self.run(cmd, timeout=600)

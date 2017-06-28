@@ -17,6 +17,9 @@ Python on Ubuntu:
     - Run:
         cmd: python /faketime/example/fake.py
         expect: 2050
+    - Run:
+        cmd: python3 /faketime/example/fake.py
+        expect: 2050
 
 
 Python on Sierra:
