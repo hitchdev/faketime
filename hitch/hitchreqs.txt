@@ -1,39 +1,78 @@
-argcomplete==1.8.2        # via hitchrun
-click==6.7                # via hitch-pip-tools, hitchrun
-colorama==0.3.7           # via hitchrun, hitchstory, prettystack
-commandlib==0.2.7         # via hitchrun, hitchvm
-decorator==4.0.11         # via ipython, traitlets
-first==2.0.1              # via hitch-pip-tools
-hitch-pip-tools==1.8.3    # via hitchrun
-hitchdoc==0.1.1
-hitchrun==0.2.4
-hitchstory==0.2.4
-hitchvm==0.2.6
+appdirs==1.4.3            # via black
+argcomplete==1.10.0       # via hitchrun
+attrs==19.2.0             # via black
+backcall==0.1.0           # via ipython
+black==19.3b0             # via hitchpylibrarytoolkit
+bleach==3.1.0             # via readme-renderer
+certifi==2019.9.11        # via requests
+chardet==3.0.4            # via requests
+click==7.0                # via black, hitchrun, pip-tools
+colorama==0.4.1           # via hitchrun, hitchstory, prettystack
+commandlib==0.3.5         # via hitchrun, icommandlib
+decorator==4.4.0          # via ipython, traitlets
+dirtemplate==0.2.0        # via hitchpylibrarytoolkit
+docutils==0.15.2          # via readme-renderer
+entrypoints==0.3          # via flake8
+flake8==3.7.8             # via hitchpylibrarytoolkit
+gitdb2==2.0.6             # via gitpython
+gitpython==3.0.3          # via hitchpylibrarytoolkit
+hitchbuild==0.4.0         # via dirtemplate, hitchbuildpy
+hitchbuildpy==0.4.6       # via hitchpylibrarytoolkit
+hitchpylibrarytoolkit==0.3.1
+hitchrun==0.3.2
+hitchrunpy==0.9.0         # via hitchpylibrarytoolkit
+hitchstory==0.12.1        # via hitchpylibrarytoolkit
+icommandlib==0.5.0        # via hitchrunpy
+idna==2.8                 # via requests
+importlib-metadata==0.23  # via path.py
 ipython-genutils==0.2.0   # via traitlets
-ipython==6.0.0
-jedi==0.10.2              # via ipython
-jinja2==2.9.5             # via hitchdoc, hitchstory, hitchvm, prettystack
-markupsafe==0.23          # via jinja2
-path.py==10.1             # via hitchdoc, hitchrun, hitchstory, hitchvm, pathquery, prettystack
-pathquery==0.2.0          # via hitchstory
-peewee==2.10.1            # via hitchdoc
-pexpect==4.2.1
-pickleshare==0.7.4        # via ipython
-prettystack==0.2.6        # via hitchrun, hitchstory
-prompt-toolkit==1.0.14    # via ipython
-ptyprocess==0.5.1         # via pexpect
-pygments==2.2.0           # via ipython
-python-dateutil==2.6.0    # via strictyaml
-python-slugify==1.2.1     # via hitchdoc, hitchstory
-q==2.6
-ruamel.yaml==0.13.14      # via strictyaml
-simplegeneric==0.8.1      # via ipython
-six==1.10.0               # via hitch-pip-tools, prompt-toolkit, python-dateutil, traitlets
-strictyaml==0.5.1         # via hitchdoc, hitchstory
-traitlets==4.3.2          # via ipython
-unidecode==0.4.20         # via python-slugify
-wcwidth==0.1.7            # via prompt-toolkit
+ipython==7.8.0            # via hitchpylibrarytoolkit
+jedi==0.15.1              # via ipython
+jinja2==2.10.3            # via dirtemplate, hitchrunpy, hitchstory, prettystack
+kaching==0.4.2            # via hitchpylibrarytoolkit
+markupsafe==1.1.1         # via jinja2
+mccabe==0.6.1             # via flake8
+more-itertools==7.2.0     # via zipp
+parso==0.5.1              # via jedi
+path.py==12.0.1           # via hitchbuild, hitchrun, hitchrunpy, hitchstory, pathquery, prettystack
+pathquery==0.3.0          # via dirtemplate, hitchbuild, hitchbuildpy, hitchstory
+peewee==3.11.2            # via hitchbuild
+pexpect==4.7.0            # via ipython
+pickleshare==0.7.5        # via ipython
+pip-tools==4.2.0          # via hitchrun
+pkginfo==1.5.0.1          # via twine
+prettystack==0.3.0        # via hitchrun, hitchrunpy, hitchstory
+prompt-toolkit==2.0.10    # via ipython
+psutil==5.6.3             # via icommandlib
+ptyprocess==0.6.0         # via pexpect
+pycodestyle==2.5.0        # via flake8
+pyflakes==2.1.1           # via flake8
+pygments==2.4.2           # via ipython, readme-renderer
+pyte==0.8.0               # via icommandlib
+python-dateutil==2.8.0    # via strictyaml
+python-slugify==3.0.6     # via dirtemplate, hitchbuild, hitchstory
+pyuv==1.4.0               # via icommandlib
+q==2.6                    # via hitchpylibrarytoolkit
+readme-renderer==24.0     # via twine
+requests-toolbelt==0.9.1  # via twine
+requests==2.22.0          # via requests-toolbelt, twine
+ruamel.yaml.clib==0.2.0   # via ruamel.yaml
+ruamel.yaml==0.16.5       # via strictyaml
+six==1.12.0               # via bleach, pip-tools, prompt-toolkit, python-dateutil, readme-renderer, traitlets
+smmap2==2.0.5             # via gitdb2
+strictyaml==1.0.5         # via dirtemplate, hitchstory
+templex==0.2.0            # via hitchpylibrarytoolkit
+text-unidecode==1.3       # via python-slugify
+toml==0.10.0              # via black
+tqdm==4.36.1              # via twine
+traitlets==4.3.3          # via ipython
+twine==2.0.0              # via hitchpylibrarytoolkit
+urllib3==1.25.6           # via requests
+uvloop==0.13.0            # via icommandlib
+wcwidth==0.1.7            # via prompt-toolkit, pyte
+webencodings==0.5.1       # via bleach
+zipp==0.6.0               # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-# pip                       # via hitchrun
-# setuptools                # via ipython
+# pip==18.1                 # via hitchrun
+# setuptools==41.4.0        # via ipython, twine
