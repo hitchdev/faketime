@@ -71,12 +71,15 @@ class CustomInstall(install):
 def read(*parts):
     # intentionally *not* adding an encoding option to open
     # see here: https://github.com/pypa/virtualenv/issues/201#issuecomment-3145690
-    return codecs.open(join(abspath(dirname(__file__)), *parts), 'r').read()
+    with codecs.open(os.path.join(os.path.abspath(os.path.dirname(__file__)), *parts)) as f:
+        return f.read()
+
 
 setup(name="faketime",
-      version="0.9.6.8",
+      version=read('VERSION').replace('\n', ''),
       description="Libfaketime wrapper.",
-      long_description=read('README.rst'),
+      long_description=read('README.md'),
+      long_description_content_type="text/markdown",
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Intended Audience :: Developers',
@@ -93,7 +96,7 @@ setup(name="faketime",
       keywords='libfaketime faketime',
       author='Colm O\'Connor',
       author_email='colm.oconnor.github@gmail.com',
-      url='https://github.com/crdoconnor/faketime/',
+      url='https://github.com/hitchdev/faketime/',
       license='GPLv2',
       install_requires=[],
       packages=find_packages(exclude=["docs", "*.so.1", "*.1.dylib", ]),
